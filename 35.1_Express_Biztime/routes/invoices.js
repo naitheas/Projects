@@ -86,7 +86,8 @@ router.put('/:id', async (req, res, next) => {
       }
       let paid_date = (paid)
       ? paid_date = new Date()
-      : paid_date = nulls;
+      : paid_date = null;
+
       const results = await db.query(
         'UPDATE invoices SET amt=$1, paid=$2, paid_date=$3 WHERE id=$4 RETURNING id, comp_code, amt, paid, add_date, paid_date',
         [amt, paid, paid_date, id]

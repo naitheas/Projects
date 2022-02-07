@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
+    "jest": "^27.5.0",
     "nodemon": "^2.0.15",
-    "pg": "^8.7.1"
+    "pg": "^8.7.3",
+    "slugify": "^1.6.5",
+    "supertest": "^6.2.2"
   },
-  "devDependencies": {},
   "description": ""
 }

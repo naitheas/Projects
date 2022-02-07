@@ -3,30 +3,35 @@
 const express = require('express');
 const app = express();
 const ExpressError = require('./expressError');
+const middleware = require("./middleware");
+const invoicesRoutes = require('./routes/invoices');
+const companiesRoutes = require('./routes/companies');
+const industriesRoutes = require('./routes/industries');
+
+
 // middleware to parse JSON.
 app.use(express.json());
-const invoicesRoutes = require('./routes/invoices');
-const companyRoutes = require('./routes/companies');
-app.use('/companies',companyRoutes);
+// middleware for logger
+app.use(middleware.logger);
+
+
+app.use('/companies',companiesRoutes);
 app.use('/invoices',invoicesRoutes);
+app.use('/industries',industriesRoutes);
 
-/** 404 handler */
+app.get('/',function(req,res){
+    res.json({ msg: 'page loaded!' })
+})
 
-app.use(function(req, res, next) {
-  const err = new ExpressError("Not Found", 404);
-  return next(err);
+//middleware error handling templates
+app.use((req,res,next) =>{
+  const e = new ExpressError("Page Not Found", 404)
+  next(e)
 });
 
-/** general error handler */
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-
-  return res.json({
-    error: err,
-    message: err.message
-  });
-});
-
+app.use((error,req,res,next)=>{ 
+				let status = error.status || 500;
+				let msg = error.message;
+				return res.status(status).json({error:{msg,status}});});
 
 module.exports = app;
